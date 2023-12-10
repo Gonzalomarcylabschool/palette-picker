@@ -10,12 +10,17 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  
 }
 
 header{
   width: 100vw;
 
+}
+
+#main {
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 input {
@@ -35,7 +40,7 @@ form {
   border-radius: .3rem;
 }
 
-form div, label, h2 button {
+form div, label, h2, fieldset, legend{
   background-color: rgb(117, 117, 117);
 }
 
@@ -51,4 +56,15 @@ form div, label, h2 button {
   padding: .5rem;
   border: none;
   border-radius: .2rem;
+}
+
+#default-pallette {
+  justify-content: space-around;
+  width: 100vw;
+}
+
+.pallette {
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
