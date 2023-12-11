@@ -54,7 +54,7 @@ export const renderPallette = (palette) => {
   getElement('#default-pallette').appendChild(paletteDiv);
 }
 
-export const MAINHTML = `
+export const MAIN_HTML = `
 <header>
         <h1>Palette Picker</h1>
       </header>
@@ -88,6 +88,7 @@ export const MAINHTML = `
         </fieldset>
           <button id="paletteSubmit" class="small-margin">Create Palette</button>
         </form>
+        <br/>
         <section id="default-pallette" class="flex"></section>
       </main>
 `;

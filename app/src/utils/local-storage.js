@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
-import paletteData from '..palettes.json';
+import paletteData from '../palettes.json';
 
-const PALETTE_KEY = 'palettes';
+const PALETTE = 'palettes';
 
 const setLocalStorageKey = (key, value) => {
   localStorage.setItem(key, JSON.stringify(value));
@@ -16,14 +16,14 @@ const getLocalStorageKey = (key) => {
   }
 }
 
-export const getPalettes = () => getLocalStorageKey(PALETTE_KEY) || [];
+export const getPalettes = () => getLocalStorageKey(PALETTE) || [];
 
 export const setPalettes = (palette) => {
   setLocalStorageKey(PALETTE_KEY, palette);
 }
 
 export const initPalettesIfEmpty = () => {
-  if (!getPalettes().length) setLocalStorageKey(PALETTE_KEY, paletteData);
+  if (!getPalettes().length) setLocalStorageKey(PALETTE, paletteData);
 }
 
 export const removePalette = (uuid) => {

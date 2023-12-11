@@ -1,9 +1,11 @@
 import './style.css';
 import palettes from './palettes.json';
-import { getElement, getFormData, copyToClipboard, renderPallette, MAINHTML} from './utils/utils.js';
+import { getElement, getFormData, copyToClipboard, renderPallette, MAIN_HTML} from './utils/utils.js';
+import { addPalette } from './utils/local-storage.js';
 
 const loadMain = () => {
-  getElement('#app').innerHTML = MAINHTML;
+  getElement('#app').innerHTML = MAIN_HTML;
+  renderDefaultPalettes();
 }
 
 const renderDefaultPalettes = () => {
@@ -18,13 +20,13 @@ const handleSubmit = (e) => {
   const formObj = getFormData(e.target)
 
   console.log(formObj);
+  addPalette(formObj);
 
   e.target.reset();
 }
 
 const main = () => {
   loadMain();
-  renderDefaultPalettes();
   getElement('#palletPicker').addEventListener('submit', handleSubmit);
   // document.getElementById('copyButton').addEventListener('click', copyToClipboard);
 }
