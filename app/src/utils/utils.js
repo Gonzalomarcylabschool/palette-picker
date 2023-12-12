@@ -1,18 +1,25 @@
+import { v4 as uuidv4 } from 'uuid';
 export const getElement = (element) => document.querySelector(element);
 
-export const getFormData = (target) => Object.fromEntries(new FormData(target));
-
+export const getFormData = (target) => {
+  const { title, color1, color2, color3, temperature } = Object.fromEntries(new FormData(target));
+  return {
+    uuid: uuidv4(),
+    title,
+    colors: [color1, color2, color3], 
+    temperature,
+  }
+}
 export const copyToClipboard = async (e) => {
-  try {
-      const textToCopy = e.target.getAttribute('data-copy-value');
-      await navigator.clipboard.writeText(textToCopy);
-  } catch (error) {
-      console.error('Unable to copy text to clipboard:', error);
+  if (e.target.classList.contains('copy')) {
+    try {
+      await navigator.clipboard.writeText(e.target.dataset.color);
+      console.log(`${e.target.dataset.color} copied to clipboard`);
+    } catch (error) {
+      console.error('Unable to copy color to clipboard', error);
+    }
   }
 };
-
-// Attach click event to the button
-// document.getElementById('copyButton').addEventListener('click', copyToClipboard);
 
 export const addStylesToElements = (element, style) => {
     for (const property in style)
@@ -26,33 +33,34 @@ export const addStylesToDOM = (styles) => {
   document.head.appendChild(styleElement);
 };
 
-export const renderPallette = (palette) => {
+export const renderPallette = (palette, where) => {
   const { title, colors, temperature, uuid } = palette;
+
   const paletteDiv = document.createElement('div');
-  const titleHeading = document.createElement('h3');
-  const colorsList = document.createElement('ul');
-  const temperatureEl = document.createElement('p');
-  const deleteButton = document.createElement('button');
-  
-  paletteDiv.classList.add('pallette', 'flex');
-  titleHeading.textContent = title;
-  temperatureEl.textContent = temperature;
-  temperatureEl.classList.add(temperature, 'temperature');
-  deleteButton.textContent = "Delete Palette"
-  deleteButton.className = "delete-palette";
-  deleteButton.dataset.uuid = uuid;
-  colors.forEach(color => {
-    const colorItem = document.createElement('li');
-    colorItem.textContent = color;
-    colorItem.style.backgroundColor = color;
-    colorItem.style.padding = '1rem';
-    colorItem.style.listStyleType = 'none'
-    colorsList.appendChild(colorItem);
-  });
-  paletteDiv.appendChild(titleHeading);
-  paletteDiv.appendChild(colorsList);
-  getElement('#default-pallette').appendChild(paletteDiv);
-}
+  paletteDiv.id = uuid;
+  paletteDiv.innerHTML = `
+  <h3>${title}</h3>
+  <div class="codes flex">
+    <ul class="paletteColors">
+      <li style="background-color: ${colors[0]}; padding: 1rem; list-style-type: none;">${colors[0]}</li>
+      <li style="background-color: ${colors[1]}; padding: 1rem; list-style-type: none;">${colors[1]}</li>
+      <li style="background-color: ${colors[2]}; padding: 1rem; list-style-type: none;">${colors[2]}</li>
+      </ul>
+    <ul class="paletteColors copies">
+      <li class="copy" style="color: black; background-color: #eeeeee; padding: 1rem; list-style-type: none;" data-color="${colors[0]}">copy</li>
+      <li class="copy" style="color: black; background-color: #eeeeee; padding: 1rem; list-style-type: none;" data-color="${colors[1]}">copy</li>
+      <li class="copy" style="color: black; background-color: #eeeeee; padding: 1rem; list-style-type: none;" data-color="${colors[2]}">copy</li>
+    </ul>
+  </div>
+  <p>${temperature}</p>
+  <button class="delete-palette" data-uuid="${uuid}">Delete Palette</button>
+  `
+  getElement(where).appendChild(paletteDiv);
+};
+
+export const removePaletteFromDOM = (uuid, where) => {
+  getElement('#new-palettes').removeChild(document.getElementById(`${uuid}`));
+};
 
 export const MAIN_HTML = `
 <header>
@@ -62,20 +70,20 @@ export const MAIN_HTML = `
         <form id="palletPicker" class="flex">
           <h2 id="formTitle" aria-labelledby="">Add a Palette</h2>
           <div id="input" class="small-margin"> 
-            <label for="paletteTitle">Palette Title</label>
-            <input type="text" name="paletteTitle" id="paletteTitle">
+            <label for="title">Palette Title</label>
+            <input type="text" name="title" id="title">
           </div>
           <div id="colorInputOne" class="small-margin">
-            <label for="colorOne">Color #1</label>
-            <input type="color" name="colorOne" id="colorOne" value="#ff0000">
+            <label for="color1">Color #1</label>
+            <input type="color" name="color1" id="color1" value="#ff0000">
           </div>
           <div id="colorInputTwo" class="small-margin">
-            <label for="colorTwo">Color #2</label>
-            <input type="color" name="colorTwo" id="colorTwo" value="#00ff00">
+            <label for="color2">Color #2</label>
+            <input type="color" name="color2" id="color2" value="#00ff00">
           </div>
           <div id="colorInputThree" class="small-margin">
-            <label for="colorThree">Color #3</label>
-            <input type="color" name="colorThree" id="colorThree" value="#0000ff">
+            <label for="color3">Color #3</label>
+            <input type="color" name="color3" id="color3" value="#0000ff">
           </div>
           <fieldset>
           <legend>Temperature</legend>
@@ -89,6 +97,10 @@ export const MAIN_HTML = `
           <button id="paletteSubmit" class="small-margin">Create Palette</button>
         </form>
         <br/>
-        <section id="default-pallette" class="flex"></section>
+        <div id="palettesDiv">
+          <section id="default-pallette" class="flex"></section>
+          <section id="new-palettes" class="flex"></section>
+        </div>
+        
       </main>
 `;

@@ -13,7 +13,8 @@
 }
 
 header{
-  width: 100vw;
+  margin-top: 1rem;
+  width: 97vw;
 
 }
 
@@ -60,11 +61,26 @@ form div, label, h2, fieldset, legend{
 
 #default-pallette {
   justify-content: space-around;
-  width: 100vw;
+  width: 97vw;
 }
 
 .pallette {
   justify-content: center;
   flex-direction: column;
   align-items: center;
+}
+
+#new-palettes {
+  margin-top: 2rem;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  width: 97vw;
+}
+li:hover {
+  cursor: default;
+}
+
+.copy:hover {
+  cursor: pointer; 
 }
